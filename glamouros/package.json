@@ -1,0 +1,19 @@
+{
+  "name": "glamouros-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "install:all": "npm.cmd install --workspace=frontend && npm.cmd install --workspace=backend",
+    "dev:backend": "npm.cmd run dev --workspace=backend",
+    "dev:frontend": "npm.cmd run dev --workspace=frontend",
+    "dev": "concurrently \"npm.cmd run dev:backend\" \"npm.cmd run dev:frontend\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
