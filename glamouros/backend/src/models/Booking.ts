@@ -13,6 +13,10 @@ export interface IBooking extends Document {
   paymentStatus: 'pending' | 'paid' | 'failed'
   bookingStatus: 'confirmed' | 'cancelled' | 'completed'
   whatsappStatus: 'sent' | 'failed' | 'pending'
+  qrCode: string
+  qrData: string
+  checkInStatus: 'pending' | 'checked_in'
+  invoiceQr: string
   createdAt: Date
 }
 
@@ -47,6 +51,14 @@ const BookingSchema: Schema = new Schema(
       enum: ['sent', 'failed', 'pending'],
       default: 'pending'
     },
+    qrCode: { type: String, default: '' },
+    qrData: { type: String, default: '' },
+    checkInStatus: {
+      type: String,
+      enum: ['pending', 'checked_in'],
+      default: 'pending'
+    },
+    invoiceQr: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now }
   },
   {

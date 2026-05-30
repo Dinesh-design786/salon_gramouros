@@ -7,6 +7,10 @@ export interface IUser extends Document {
   phone: string
   password?: string
   role: 'customer' | 'admin'
+  membershipQr: string
+  loyaltyQr: string
+  loyaltyPoints: number
+  membershipTier: 'Bronze' | 'Silver' | 'Gold' | 'Platinum'
   createdAt: Date
   comparePassword: (password: string) => Promise<boolean>
 }
@@ -34,6 +38,14 @@ const UserSchema: Schema = new Schema(
       type: String, 
       enum: ['customer', 'admin'], 
       default: 'customer' 
+    },
+    membershipQr: { type: String, default: '' },
+    loyaltyQr: { type: String, default: '' },
+    loyaltyPoints: { type: Number, default: 100 },
+    membershipTier: { 
+      type: String, 
+      enum: ['Bronze', 'Silver', 'Gold', 'Platinum'], 
+      default: 'Bronze' 
     },
     createdAt: { type: Date, default: Date.now }
   },

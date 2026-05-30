@@ -145,6 +145,33 @@ export const createBooking = async (req: Request, res: Response) => {
     // --- Generate invoice
     const invoiceId = generateInvoiceId()
 
+    // --- Generate QR Code Data & URL
+    const bookingId = `GLM-${Math.random().toString(36).substring(2, 8).toUpperCase()}`
+    const checkInQrData = {
+      bookingId,
+      customerId: email.trim().toLowerCase(),
+      customerName: customerName.trim(),
+      service: serviceName,
+      branch: branchName,
+      date: bookingDate,
+      time: bookingTime,
+      status: 'confirmed'
+    }
+    const checkInQrString = JSON.stringify(checkInQrData)
+    const checkInQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=7F77DD&data=${encodeURIComponent(checkInQrString)}`
+
+    // --- Generate Invoice QR Code Data & URL
+    const invoiceQrDataObj = {
+      invoiceId,
+      customerName: customerName.trim(),
+      service: serviceName,
+      branch: branchName,
+      gstBreakdown: "CGST 9% (₹45) + SGST 9% (₹45)",
+      paymentInfo: offlinePayment ? "💵 Pending Counter Settlement" : "💳 Paid Online Secured"
+    }
+    const invoiceQrString = JSON.stringify(invoiceQrDataObj)
+    const invoiceQrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=1D9E75&data=${encodeURIComponent(invoiceQrString)}`
+
     // --- Persist booking to MongoDB
     const booking = new Booking({
       invoiceId,
@@ -158,7 +185,11 @@ export const createBooking = async (req: Request, res: Response) => {
       offlinePayment: Boolean(offlinePayment),
       paymentStatus: offlinePayment ? 'pending' : 'pending',
       bookingStatus: 'confirmed',
-      whatsappStatus: 'pending'
+      whatsappStatus: 'pending',
+      qrCode: checkInQrCodeUrl,
+      qrData: checkInQrString,
+      checkInStatus: 'pending',
+      invoiceQr: invoiceQrCodeUrl
     })
 
     await booking.save()
@@ -175,6 +206,10 @@ export const createBooking = async (req: Request, res: Response) => {
       offlinePayment: booking.offlinePayment,
       paymentStatus: booking.paymentStatus,
       bookingStatus: booking.bookingStatus,
+      qrCode: booking.qrCode,
+      qrData: booking.qrData,
+      checkInStatus: booking.checkInStatus,
+      invoiceQr: booking.invoiceQr,
       createdAt: booking.createdAt
     }
 
@@ -199,6 +234,7 @@ Hello *${customerName}*! Your luxury salon appointment is confirmed. 🎉
 📋 *BOOKING INVOICE*
 ━━━━━━━━━━━━━━━━━━━━━
 🆔 Invoice ID: \`${invoiceId}\`
+🆔 Booking ID: \`${bookingId}\`
 👤 Client: ${customerName}
 📞 Phone: ${phone}
 💆 Service: ${serviceName}
@@ -207,6 +243,10 @@ Hello *${customerName}*! Your luxury salon appointment is confirmed. 🎉
 ⏰ Time: ${bookingTime}
 ${paymentNote}
 ━━━━━━━━━━━━━━━━━━━━━
+
+📲 *YOUR QR CHECK-IN CARD*
+Show the attached QR code link at the reception desk during check-in:
+🔗 Check-in QR: ${checkInQrCodeUrl}
 
 Thank you for choosing *GlamourOS Luxe Salon*! 
 Our team looks forward to serving you. ✨
@@ -268,12 +308,13 @@ export const getBookings = async (req: Request, res: Response) => {
 // ====================================================
 export const updateBookingStatus = async (req: Request, res: Response) => {
   const { id } = req.params
-  const { bookingStatus, paymentStatus } = req.body
+  const { bookingStatus, paymentStatus, checkInStatus } = req.body
 
   try {
     const update: any = {}
     if (bookingStatus) update.bookingStatus = bookingStatus
     if (paymentStatus) update.paymentStatus = paymentStatus
+    if (checkInStatus) update.checkInStatus = checkInStatus
 
     const updated = await Booking.findByIdAndUpdate(id, update, { new: true })
     if (!updated) {
@@ -286,6 +327,7 @@ export const updateBookingStatus = async (req: Request, res: Response) => {
       bookingId: id,
       bookingStatus: updated.bookingStatus,
       paymentStatus: updated.paymentStatus,
+      checkInStatus: updated.checkInStatus,
       timestamp: new Date().toISOString()
     })
 
