@@ -140,12 +140,24 @@ const InvoiceModal = ({ invoice, onClose }: { invoice: Invoice; onClose: () => v
         </div>
 
         {/* WhatsApp Confirmation Banner */}
-        <div className="mx-5 mt-4 bg-[#1a2e1a] border border-emerald-800/50 rounded-2xl p-3 flex items-start gap-3">
-          <MessageSquare className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">WhatsApp Message Sent</p>
-            <p className="text-[9px] text-emerald-600 mt-0.5">A booking confirmation with full invoice details has been sent to <span className="text-emerald-400 font-bold">{invoice.phone}</span> via WhatsApp.</p>
+        <div className="mx-5 mt-4 bg-[#1a2e1a] border border-emerald-850/60 rounded-2xl p-3.5 flex flex-col gap-3">
+          <div className="flex items-start gap-3">
+            <MessageSquare className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">WhatsApp Integration Live</p>
+              <p className="text-[9px] text-emerald-600 mt-0.5">A booking pass was dispatched to <span className="text-emerald-400 font-bold">{invoice.phone}</span>. If you are using a Twilio Sandbox account, please click below to send it directly via WhatsApp!</p>
+            </div>
           </div>
+          <a
+            href={`https://api.whatsapp.com/send?phone=${invoice.phone.replace(/[^0-9]/g, '')}&text=${encodeURIComponent(
+              `✅ *GlamourOS Appointment Confirmed*\n\n💆 *Service:* ${invoice.serviceName}\n🏢 *Branch:* ${invoice.branchName}\n📅 *Date:* ${invoice.bookingDate}\n⏰ *Time:* ${invoice.bookingTime}\n🔑 *Booking ID:* ${invoice.invoiceId}\n\n📱 *QR Pass & Invoice:* http://localhost:3000/invoice/${invoice.invoiceId}\n\nThank you for choosing GlamourOS! ✨`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-black uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/20"
+          >
+            💬 Open &amp; Send via WhatsApp Web/App
+          </a>
         </div>
 
         {/* Invoice rows */}
