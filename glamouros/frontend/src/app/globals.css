@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #080811; /* Sleek deep periwinkle-dark space */
+    color: #f8fafc;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image: radial-gradient(at top right, rgba(99, 102, 241, 0.15), transparent 60%), radial-gradient(at bottom left, rgba(236, 72, 153, 0.1), transparent 50%);
+  }
+}
+
+/* Linear-inspired custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f1f27;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7F77DD;
+}
+
+/* Glassmorphism custom elements */
+.flat-card {
+  background: rgba(10, 10, 15, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.flat-input {
+  background: rgba(5, 5, 10, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #f8fafc;
+  font-size: 13px;
+}
+
+.flat-input:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.15);
+}
+
+/* Dynamic custom animation utilities */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.border-glow-primary {
+  border: 1px solid #7F77DD;
+}
+.border-glow-success {
+  border: 1px solid #1D9E75;
+}
+.border-glow-alert {
+  border: 1px solid #D85A30;
+}
+
+/* 🌊 Liquid Fluid Premium Interaction System */
+
+/* Smooth fluid transitions using high-performance cubic-beziers */
+.liquid-fluid-transition {
+  transition: all 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Premium liquid-scale hover cards */
+.liquid-card {
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.65s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(800px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(197, 168, 128, 0.08), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.liquid-card:hover::before {
+  opacity: 1;
+}
+
+.liquid-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(197, 168, 128, 0.35) !important;
+  box-shadow: 0 20px 40px -15px rgba(197, 168, 128, 0.22),
+              0 0 30px -10px rgba(197, 168, 128, 0.15),
+              inset 0 1px 0 0 rgba(255, 255, 255, 0.1) !important;
+  background: rgba(18, 15, 23, 0.85) !important;
+}
+
+/* Liquid fluid zoom on hover for premium images */
+.liquid-img-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.liquid-img {
+  transition: transform 1.4s cubic-bezier(0.15, 0.85, 0.35, 1),
+              filter 1.2s cubic-bezier(0.15, 0.85, 0.35, 1);
+  will-change: transform, filter;
+}
+
+.liquid-card:hover .liquid-img {
+  transform: scale(1.12) rotate(0.8deg);
+  filter: brightness(1.08) contrast(1.02);
+}
+
+/* Shifting liquid-wave button gradient */
+.liquid-btn {
+  background-size: 200% 200% !important;
+  background-position: 0% 50% !important;
+  transition: background-position 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: transform, box-shadow, background-position;
+}
+
+.liquid-btn:hover {
+  background-position: 100% 50% !important;
+  transform: scale(1.03) translateY(-1px);
+  box-shadow: 0 12px 25px -8px rgba(197, 168, 128, 0.4),
+              0 0 20px -5px rgba(197, 168, 128, 0.2) !important;
+}
+
+.liquid-btn:active {
+  transform: scale(0.98) translateY(0px);
+}
+
+/* Fluid quick demo pill hover */
+.liquid-pill {
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.liquid-pill:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(197, 168, 128, 0.25);
+  border-color: rgba(197, 168, 128, 0.5) !important;
+  background: rgba(197, 168, 128, 0.15) !important;
+}
+
+/* Fluid interactive member pass card */
+.liquid-pass {
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.liquid-pass:hover {
+  transform: translateY(-3px) rotate(0.5deg);
+  box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.7),
+              0 0 35px -5px rgba(197, 168, 128, 0.15);
+}
+
+/* Liquid interactive text transition */
+.liquid-text-glow {
+  background: linear-gradient(90deg, #f8fafc, #C5A880, #f8fafc);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
