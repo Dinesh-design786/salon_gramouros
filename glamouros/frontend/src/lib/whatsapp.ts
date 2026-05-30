@@ -8,11 +8,25 @@ export async function sendWhatsApp(phone: string, message: string, mediaUrl?: st
     return { success: false, error: 'Twilio credentials not configured in environment.' }
   }
 
-  // Format recipient's phone: ensure it has standard whatsapp:+91 format for India if not pre-formatted
-  const sanitizedPhone = phone.replace(/\s+/g, '').replace(/[^+\d]/g, '')
-  const toFormatted = sanitizedPhone.startsWith('+') 
-    ? `whatsapp:${sanitizedPhone}` 
-    : `whatsapp:+91${sanitizedPhone}`
+  // 1. Remove all spaces, dashes, parentheses, and non-numeric characters except +
+  let sanitizedPhone = phone.replace(/[\s\-\(\)]/g, '')
+  
+  // 2. If it has a leading zero, remove it (e.g. 09876543210 -> 9876543210)
+  if (sanitizedPhone.startsWith('0')) {
+    sanitizedPhone = sanitizedPhone.substring(1)
+  }
+
+  let finalNumber = sanitizedPhone
+  if (!sanitizedPhone.startsWith('+')) {
+    // If it already has the 91 prefix but no plus symbol (e.g. 919876543210)
+    if (sanitizedPhone.startsWith('91') && sanitizedPhone.length === 12) {
+      finalNumber = `+${sanitizedPhone}`
+    } else {
+      finalNumber = `+91${sanitizedPhone}`
+    }
+  }
+
+  const toFormatted = `whatsapp:${finalNumber}`
 
   try {
     console.log(`📱 Initiating Twilio WhatsApp dispatch (pure fetch) to ${toFormatted} with media: ${mediaUrl}...`)
